@@ -1,3 +1,5 @@
+import React from 'react';
+import axios from 'axios';
 import './App.css';
 import logo from '../src/pic/warning.png'
 import { useForm } from "react-hook-form";
@@ -9,8 +11,6 @@ import { Year } from '../src/units/year'
 function App() {
 
   const {register, handleSubmit, formState: { errors }} = useForm();
-
-  const onSubmit = data => console.log(data)
 
   const [pass, setPass] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -33,6 +33,17 @@ function App() {
     return <option key={x} value={x}>{x}</option>
   }
 
+  const onSubmit = (e) => {
+    console.log(e)
+    axios.post('https://my-json-server.typicode.com/typicode/demo/posts', e)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
   return (
     <>
     <div className='main'>
@@ -44,12 +55,13 @@ function App() {
           <br/>
           {errors.username && <img src={logo} alt={''} className={'error'}/>}
           <input 
+            autoFocus={true}
             className={errors.username? 'input-error': 'input'}
             type={'text'} 
             placeholder={'Enter your username'}
             {...register('username', {minLength: {
               value : 3,
-              message: 'Username must have 3 characters or more',
+              message: 'Username have to 3 characters or more',
             },
             maxLength: {
               value: 12,
@@ -64,7 +76,7 @@ function App() {
           <label className='label'>Email: </label>
           <br/>
           {errors.email && <img src={logo} alt={''} className={'error'}/>}
-          <input 
+          <input
             className={errors.email? 'input-error': 'input'}
             type={'text'} 
             placeholder={'example@gamil.com'}
@@ -82,7 +94,7 @@ function App() {
           <label className='label'>Password: </label>
           <br/>
           {errors.password && <img src={logo} alt={''} className={'error'}/>}
-          <input 
+          <input
             className={errors.password? 'input-error': 'input'}
             type={'password'}
             placeholder={'Enter your password'}
@@ -130,7 +142,7 @@ function App() {
                 </select>
               </td>
               <td>
-                <select 
+                <select
                   className={errors.day? 'error-brith': 'birth'}
                   {...register('day', {validate: val => val !== 'Day' || 'Select your day'})}
                   onChange={(e) => {setDay(e.target.value)}}
@@ -140,7 +152,7 @@ function App() {
                 </select>
               </td>
               <td>
-                <select 
+                <select
                   className={errors.year? 'error-brith': 'birth'}
                   {...register('year', {validate: val => val !== 'Year' || 'Select your Year'})}
                   onChange={(e) => {setYear(e.target.value)}}
@@ -158,7 +170,7 @@ function App() {
             {errors.year && <li className='p-birth-error'>{errors.year.message}</li>}
           </ul>
           <br/>
-          <input className='btn' type={'submit'} value={'Submit'}/>
+          <input className='btn' type={'submit'} value={'Submit'} />
         </form>
       </div>
     </div>
